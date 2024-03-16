@@ -1,0 +1,56 @@
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+</head>
+  <div class="col-md-12">
+    <h3>Create Session</h3>
+  </div>
+  <div class="col-md-6">
+    <form [formGroup]="newsessionForm" (ngSubmit)="saveSession(newsessionForm.value)" autocomplete="off">
+      <div  [ngClass]="{'error': name.invalid && name.dirty}" class="form-group">
+        <label for="sessionName">Session Name:</label>
+        <em *ngIf="name.invalid && (name.dirty || mouseoversave)">Required</em>
+        <input formControlName="name" id="sessionName" type="text" class="form-control" placeholder="session name..." />
+      </div>
+      <div [ngClass]="{'error': presenter.invalid && presenter.dirty}" class="form-group">
+        <label for="eventDate">Presenter:</label>
+        <em *ngIf="presenter.invalid && (presenter.dirty || mouseoversave)">Required</em>
+        <input formControlName="presenter" id="presenter" type="text" class="form-control" placeholder="presenter..." />
+      </div>
+      <div [ngClass]="{'error': duration.invalid && duration.dirty}" class="form-group">
+        <label for="duration">Duration:</label>
+        <em *ngIf="duration.invalid && (duration.dirty || mouseoversave)">Required</em>
+        <select formControlName="duration" class="form-control">
+          <option value="">select duration...</option>
+          <option value="1">Half Hour</option>
+          <option value="2">1 Hour</option>
+          <option value="3">Half Day</option>
+          <option value="4">Full Day</option>
+        </select>
+      </div>
+      <div [ngClass]="{'error': level.invalid && level.dirty}" class="form-group">
+        <label for="level">Level:</label>
+        <em *ngIf="level.invalid && (level.dirty || mouseoversave)">Required</em>
+        <select formControlName="level" class="form-control">
+          <option value="">select level...</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+      <div [ngClass]="{'error': abstract.invalid && abstract.dirty}" class="form-group">
+        <label for="abstract">Abstract:</label>
+        <em *ngIf="abstract.invalid && (abstract.dirty || mouseoversave) && 
+        abstract.errors?.['required']">Required</em>
+        <em *ngIf="abstract.invalid && (abstract.dirty || mouseoversave) && 
+        abstract.errors?.['maxlength']">Cannot exceed 100 characters</em>
+        <em *ngIf="abstract.invalid && (abstract.dirty || mouseoversave) && 
+        abstract.errors?.['restrictedWords']">Restricted words : {{abstract.errors?.['restrictedWords']}}</em>
+        <textarea formControlName="abstract" id="abstract" rows=3 class="form-control" placeholder="abstract..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" (mouseenter)="mouseoversave=true"
+      (mouseleave)="mouseoversave=false" [disabled]="newsessionForm.invalid">Save</button>
+      <button [routerLink]="['/events']" type="button" class="btn btn-default">Cancel</button> 
+    </form>
+  </div>
