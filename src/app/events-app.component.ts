@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from './user/auth.service';
 
 @Component({
   selector: 'events-app',
@@ -6,5 +7,11 @@ import { Component } from '@angular/core';
             <router-outlet></router-outlet>`,
 })
 export class EventsAppComponent {
-  title = 'events-app';
+  
+  constructor(private auth: AuthService) {
+    //this.auth.checkAuthenticationStatus();
+  }
+
+  //  '/user/profile' may break if it loads before checkAuthenticationStatus() is completed
+  // Need to implement a resolver in ProfileComponent
 }

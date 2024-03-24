@@ -6,7 +6,7 @@
   <div class="col-md-12">
     <h3>Create Session</h3>
   </div>
-  <div class="col-md-6">
+  <div id="targetElement" class="col-md-6">
     <form [formGroup]="newsessionForm" (ngSubmit)="saveSession(newsessionForm.value)" autocomplete="off">
       <div  [ngClass]="{'error': name.invalid && name.dirty}" class="form-group">
         <label for="sessionName">Session Name:</label>
@@ -51,6 +51,6 @@
       </div>
       <button type="submit" class="btn btn-primary" (mouseenter)="mouseoversave=true"
       (mouseleave)="mouseoversave=false" [disabled]="newsessionForm.invalid">Save</button>
-      <button [routerLink]="['/events']" type="button" class="btn btn-default">Cancel</button> 
+      <button (click)="cancel()" type="button" class="btn btn-default">Cancel</button> 
     </form>
   </div>

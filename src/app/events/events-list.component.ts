@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { EventService } from './shared/event.service';
-import { ToastrService } from '../common/toastr.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
 import { ActivatedRoute } from '@angular/router';
 import { IEvent } from './index';
 
@@ -22,15 +21,17 @@ export class EventsListComponent implements OnInit {
   events!:IEvent[] 
   //'!' is a definite assignment (ensuring to ts that this will be definitely initialized with some data)
 
-  constructor(private eventService: EventService, private toastr: ToastrService, private route:ActivatedRoute) {
+  // For this toastr variable, inject the TOASTR_TOKEN that provides app module's global toastr object
+  constructor(@Inject(TOASTR_TOKEN) private toastr: Toastr, private route:ActivatedRoute) {
 
   }
 
   ngOnInit() {
+    // Accessing resolve data
     this.events = this.route.snapshot.data['events'];
   }
 
-  //This method not works because priority is given to router when clicking the event-thumnbail component
+  //This method not works because priority is given to routerlink (check EventThumbnail Component)
   handleClick(event: any) {
     this.toastr.success(event.name);
   }

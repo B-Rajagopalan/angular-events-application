@@ -4,16 +4,18 @@ import {
   EventsListComponent,
   EventDetailsComponent,
   CreateEventComponent,
-  resolve,
-  canActivate
+  resolveEvent,
+  canActivate,
+  resolveEvents
 } from './events/index';
 import { Error404Component } from './errors/404.component';
 import { CreateSessionComponent } from './events/event-details/create-session.component';
 
 const routes: Routes = [
-  { path:'events', component:EventsListComponent, resolve:{events:resolve} },
+  { path:'events', component:EventsListComponent, resolve:{events:resolveEvents} },
   { path:'events/new', component:CreateEventComponent, canDeactivate:['canDeactivateCreateEvent'] },
-  { path:'events/:id', component:EventDetailsComponent, canActivate:[canActivate] },
+  { path:'events/:id', component:EventDetailsComponent, canActivate:[canActivate],
+    resolve:{event:resolveEvent} },
   { path:'', redirectTo:'/events', pathMatch:'full' },
   { path:'events/session/new', component: CreateSessionComponent},
   { path:'404', component:Error404Component }, 
@@ -25,7 +27,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    scrollPositionRestoration: 'enabled' // Enable scroll position restoration when navigating back (little laggy)
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

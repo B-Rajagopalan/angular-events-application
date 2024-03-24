@@ -1,7 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventService } from './shared';
-import { ToastrService } from '../common/toastr.service';
 
 @Component({
     templateUrl:'create-event.component.html',
@@ -13,11 +12,10 @@ import { ToastrService } from '../common/toastr.service';
 
 export class CreateEventComponent {
     newEvent: any
-    isDirty:boolean = true;
+    isDirty:boolean = true; // used for canDeactivate function
     mouseoversave!: boolean
 
-    constructor(private router:Router, private eventService: EventService,
-        private toastr: ToastrService) {
+    constructor(private router:Router, private eventService: EventService) {
 
     }
 
@@ -34,4 +32,4 @@ export class CreateEventComponent {
     checkDirty() {
         return this.isDirty;
     }
-}   
+}

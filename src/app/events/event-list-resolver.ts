@@ -4,7 +4,8 @@ import { EventService } from "./shared/event.service";
 import { Observable, map } from "rxjs";
 import { IEvent } from "./index";
 
-export const resolve:ResolveFn<any> = ():Observable<IEvent[]> => {
+export const resolveEvents:ResolveFn<any> = ():Observable<IEvent[]> => {
     const eventService = inject(EventService);
-    return eventService.getEvents().pipe(map(events => events));
+    return eventService.getEvents()
+    // resolver automatically subscribes to the observable call it gets (no need pipe)
 }

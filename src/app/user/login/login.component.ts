@@ -11,19 +11,23 @@ import { NgForm } from '@angular/forms';
 })
 //TEMPLATE BASED FORMS
 export class LoginComponent {
-   @ViewChild('loginForm',{static:true}) loginForm!: NgForm //Way to access validations in component
+   // Way to access controls in component
+   @ViewChild('loginForm',{static:true}) loginForm!: NgForm 
    // {static:true} ensures that loginForm ref is captured before ngOnInit()
    userName!: string
    password!: string
    mouseoverLogin!: boolean
+   loginInvalid: boolean = false;
 
    constructor (private auth: AuthService, private router: Router) {
 
    }
 
+   // If using server, need to check the received data is false
+   // if false just change loginInvalid to true else route to /events
    login(userData: any) {
     this.auth.login(userData.userName,userData.password)
-    this.router.navigate(['/events'])
+    this.router.navigate(['/events']) 
    }
 
    cancel() {

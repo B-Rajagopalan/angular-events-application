@@ -1,19 +1,13 @@
-import { Injectable } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 
-declare let toastr:any; //global reference to access toastr library
+//dependency injection
+//using toastr each time gives a different object so no conflicts can happen
+export const TOASTR_TOKEN = new InjectionToken<Toastr>('toastr');
 
-@Injectable()
-export class ToastrService {
-    success(message: string, title?:string) {
-       toastr.success(message,title)
-    }
-    info(message: string, title?: string) {
-        toastr.info(message,title)
-    }
-    warning(message: string, title?: string) {
-        toastr.warning(title,message)  //passing as a 2nd argument has some bold effect on the message (refer toastr library)
-    }
-    error(message: string, title?: string) {
-        toastr.error(title,message)
-    }
+//model object for toastr (just for intellisense)
+export interface Toastr {
+    success(msg: string, title?: string): void;
+    info(msg: string, title?: string): void;
+    warning(msg: string, title?: string): void;
+    error(msg: string, title?: string): void;
 }

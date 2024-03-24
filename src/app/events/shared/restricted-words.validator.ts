@@ -4,7 +4,7 @@ import { FormControl, ValidationErrors } from "@angular/forms";
 export function restrictedWords(words: string[]) {
     return (control: FormControl): ValidationErrors | null => {
         if(!words) return null;
-        let invalidWords: (string | null)[] = words.map((w) => control.value.includes(w) ? w : null)
+        const invalidWords: (string | null)[] = words.map((w) => control.value.includes(w) ? w : null)
         .filter((w) => w!=null);
         return invalidWords && invalidWords.length > 0
             ? {'restrictedWords' : invalidWords.join(', ')} : null;

@@ -1,29 +1,105 @@
-import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-import { IEvent } from "./event.model";
+import { EventEmitter, Injectable } from "@angular/core";
+import { Observable, Subject, catchError, of } from "rxjs";
+import { IEvent, ISession } from "./event.model";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Injectable()
 export class EventService {
     //Each service needs Injectable() decoration if it is injecting someother service or component
-    /* for ex : constructor(private http:Http) { }*/
+    // for ex : 
+    constructor(private http:HttpClient) { }
+    
     getEvents():Observable<IEvent[]> {
-        let subject = new Subject<IEvent[]>();
-        setTimeout(()=> {
-          subject.next(EVENTS);
-          subject.complete();
-        },500);
-        return subject;
-    }
-
-    getEvent(id:number):IEvent {
-      return EVENTS.find(event => event.id === id)!; // ! is to tell typescript that return type will never be undefined
+           const subject = new Subject<IEvent[]>();
+           setTimeout(()=> {
+             subject.next(EVENTS);
+             subject.complete();
+           },500);
+           return subject;
     }
     
-    saveEvent(event: any) {
+    //  From http request (HTTP calls will not happen until anyone subscribes to it)
+    /*
+    getEvents():Observable<IEvent[]> {
+        return this.http.get<IEvent[]>('/api/events')
+         .pipe(catchError(this.handleError<IEvent[]>('getEvents', [])))
+    }
+    */
+    
+    getEvent(id:number):IEvent {
+         return EVENTS.find(event => event.id === id)!; 
+         // ! is to tell typescript that return type will never be undefined
+    } 
+   
+    //  From http request
+    /*
+    getEvent(id:number):Observable<IEvent> {
+      return this.http.get<IEvent>('/api/events'+ id)
+       .pipe(catchError(this.handleError<IEvent>('getEvent')))
+    }
+    */
+    saveEvent(event: IEvent) {
       event.id = EVENTS.length+1;
-      event.session = [];
+      event.sessions = [];
       EVENTS.push(event);
     }
+
+    //  From http request
+    /*
+    saveEvent(event: IEvent) {
+      let options = {headers: new HttpHeaders({'Content-Type':'application/json'})}
+      return this.http.post<IEvent>('/api/events', event, options)
+       .pipe(catchError(this.handleError<IEvent>('saveEvent')))
+    }
+    */
+
+    // updateEvent not needed after server is implemented. Can re-use saveEvent
+    // Basic idea is to implement server in a way that when events comes without id, need to create
+    // with id - update existing event
+    updateEvent(event: IEvent) {
+      const index = EVENTS.findIndex(x => x.id === event.id)
+      EVENTS[index] = event;
+    }
+
+    searchSessions(searchTerm: string) {
+      const term = searchTerm.toLocaleLowerCase();
+      let resultSessions: ISession[] = []
+
+      EVENTS.forEach(event => {
+        let matchingSessions: ISession[] = event.sessions.filter(session => 
+          session.name.toLocaleLowerCase().includes(term))
+        // Adding eventId to session for future reference
+        matchingSessions = matchingSessions.map((session) =>
+          {
+            session.eventId = event.id;
+            return session;
+          })
+        resultSessions = resultSessions.concat(matchingSessions);
+      })
+
+      const sessionsEmitter = new EventEmitter(true);
+      setTimeout(() => {
+        sessionsEmitter.emit(resultSessions);
+      }, 100)
+
+      return sessionsEmitter;
+    }
+
+    //  From http request
+    /*
+    searchSessions(searchTerm: string) {
+      return this.http.get<ISession[]>('/api/sessions/search?search='+searchTerm) //query string
+       .pipe(catchError(this.handleError<ISession[]>('searchSessions')))
+    }
+    */
+
+    //Error Handler
+    private handleError<T> (operation = 'operation', result?: T) {
+      return (error: any): Observable<T> => {
+        console.error(error);
+        return of (result as T);
+      }
+    } 
 }
 
  const EVENTS:IEvent[] = [
@@ -329,6 +405,22 @@ export class EventService {
           guaranteed!`,
           voters: ['bradgreen', 'igorminar', 'johnpapa']
         }
+      ]
+    },
+    {
+      id: 6,
+      name: 'dummy-vegas',
+      date: new Date('2/10/2037'),
+      time: '9:00 am',
+      price: 400.00,
+      imageUrl: '/assets/images/ng-vegas.png',
+      location: {
+        address: 'The Excalibur',
+        city: 'Las Vegas',
+        country: 'USA'
+      },
+      sessions: [
+        
       ]
     }
   ]

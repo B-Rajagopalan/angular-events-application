@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
-import { ToastrService } from '../common/toastr.service';
+import { TOASTR_TOKEN, Toastr } from '../common/toastr.service';
 
 @Component({
   templateUrl: './profile.component.html',
@@ -17,7 +17,7 @@ export class ProfileComponent implements OnInit{
   private firstName!: FormControl
   private lastName!: FormControl
 
-  constructor(private auth: AuthService, private router: Router, private toastr: ToastrService) {
+  constructor(private auth: AuthService, private router: Router, @Inject(TOASTR_TOKEN)private toastr: Toastr) {
 
   }
 
@@ -37,7 +37,8 @@ export class ProfileComponent implements OnInit{
   saveProfile(formValues: any) {
     if(this.profileform.valid) {
       this.auth.updateCurrentUser(formValues);
-      this.router.navigate(['events'])
+      this.toastr.success('Profile Saved')
+      this.router.navigate(['/events']) // '/events' - routing starts from the root
     }
     else {
       this.toastr.error('Error')
@@ -53,6 +54,11 @@ export class ProfileComponent implements OnInit{
   }
 
   cancel() {
-    this.router.navigate(['events'])
+    this.router.navigate(['events']) // 'events' - routing starts from the path where we are
+  }
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/events'])
   }
 }
