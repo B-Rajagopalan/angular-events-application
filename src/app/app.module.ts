@@ -22,7 +22,6 @@ import { TOASTR_TOKEN as TOKEN_TOASTR, Toastr, JQ_TOKEN, CollapsibleWellComponen
 import { Error404Component } from './errors/404.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { VoterService } from './events/event-details/voter.service';
 
 // typescript considers window as any object so that it wont try to identify toastr
 // since toastr is not an inbuilt library (no definitions available) 
