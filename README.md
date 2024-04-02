@@ -1,5 +1,7 @@
 # EventsApp
 
+Hosted this application with Github Pages :  https://b-rajagopalan.github.io/angular-events-application/
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.3.
 
 ## Development server
